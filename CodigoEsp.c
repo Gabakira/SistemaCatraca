@@ -62,10 +62,10 @@ void loop() {
   rfid.PICC_HaltA();
 
   HTTPClient http;
-  String url = URL_BASE
+  String url = URL_BASE;
   url += UID;
-  url += "?i=";
-  url += digitalRead(PIN_IN) ? "True" : "False";
+  url += "?Sentido=";
+  url += digitalRead(PIN_IN) ? "E" : "S";
   http.begin(url);
   int codHttp = http.GET();
   UID = http.getString();
