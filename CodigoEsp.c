@@ -4,11 +4,12 @@
 #include <HTTPClient.h>
 
 #define URL_BASE "http://tcceloccs.duckdns.org/api/RFID/"
-#define SS_PIN  7
-#define RST_PIN 1
-#define PIN_OUT 2
-#define LEDR 0
-#define LEDG 10
+#define SS_PIN  7 //D2
+#define RST_PIN 1 //D3
+#define PIN_OUT 2 //D4
+#define LEDR 0 //D1
+#define LEDG 10 //D0
+#define PIN_IN 6 //D7
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
@@ -22,7 +23,7 @@ void setup() {
   pinMode(LEDG,OUTPUT);
   pinMode(LEDR,OUTPUT);
   Serial.println("MFRC522 Ready"); 
-  WiFi.begin("aaa", "");
+  WiFi.begin("Wokwi-GUEST", "");
   long time0 = millis();
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(8,LOW);
@@ -61,7 +62,10 @@ void loop() {
   rfid.PICC_HaltA();
 
   HTTPClient http;
-  String url = URL_BASE + UID;
+  String url = URL_BASE
+  url += UID;
+  url += "?i=";
+  url += digitalRead(PIN_IN) ? "True" : "False";
   http.begin(url);
   int codHttp = http.GET();
   UID = http.getString();
